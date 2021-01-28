@@ -2,4 +2,6 @@
     <string name="app_name">FICHAR</string>
     <string name="USUARIO">USUARIO</string>
     <string name="CONTRASEÑA">CONTRASEÑA</string>
+    <string name="DIRECCION">DIRECCION</string>
+    <string name="CLIENTE">CLIENTE</string>
 </resources>
