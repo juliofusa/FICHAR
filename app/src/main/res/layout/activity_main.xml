@@ -20,14 +20,17 @@
     <EditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
         android:autofillHints=""
+        android:background="@drawable/rectangle"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="10"
         android:hint="escriba su nombre"
         android:inputType="textPersonName"
+        android:paddingStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -45,11 +48,14 @@
     <EditText
         android:id="@+id/editTextTextPersonName3"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/rectangle"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="10"
         android:inputType="textPassword"
+        android:paddingStart="10dp"
         android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +70,7 @@
         android:contentDescription="imagen de fichaje"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
-        app:srcCompat="@drawable/LOGIN" />
+        app:srcCompat="@drawable/log" />
 
     <ImageButton
         android:id="@+id/imageButton3"
@@ -127,6 +133,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner"
