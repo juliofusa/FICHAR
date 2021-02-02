@@ -4,4 +4,10 @@
     <string name="CONTRASEÑA">CONTRASEÑA</string>
     <string name="DIRECCION">DIRECCION</string>
     <string name="CLIENTE">CLIENTE</string>
+    <string name="GPS">GPS</string>
+    <string name="FIN">fin de fichaje</string>
+    <string name="HORA">HORA</string>
+    <string name="FECHA">FECHA</string>
+    <string name="CONFIGURAR">CONFIGURAR</string>
+    <string name="fichar_ini">INICIO DE FICHAJE</string>
 </resources>
