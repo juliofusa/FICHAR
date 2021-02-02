@@ -1,15 +1,19 @@
 package com.example.fichar;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,20 +26,26 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     public TextView fecha, direccion, hora, cliente, gps;
-
+    public boolean b=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BasedbHelper  usdbh = new BasedbHelper(this);
+
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
         inicializar();
     }
 
     private void inicializar() {
-
+       // declaramos controles
         fecha = findViewById(R.id.Txt_fecha);
 
         fecha.setText(ADAPTADORES.FECHAconformato());
@@ -50,7 +60,34 @@ public class MainActivity extends AppCompatActivity {
 
         Comprobar_permisos();
 
+        Timer timer = new Timer();
+
+        TimerTask t = new TimerTask() {
+
+            @Override
+            public void run() {
+
+
+                if (b = false){
+                    hora.setTextColor(getResources().getColor(R.color.verde));
+                   // hora.setText(ADAPTADORES.HORAconformato());
+                    b=true;
+                }else{
+                   hora.setTextColor(getResources().getColor(R.color.black));
+                    hora.setText(ADAPTADORES.HORAconformato());
+                    b=false;
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(t,1000,1000);
+
+
+
+
+
     }
+
+
 
     private void Comprobar_permisos() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -125,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             String sLatitud = String.valueOf(location.getLatitude());
             String sLongitud = String.valueOf(location.getLongitude());
             gps.setText(sLatitud +" "+ sLongitud);
-            hora.setText(ADAPTADORES.HORAconformato());
+            //hora.setText(ADAPTADORES.HORAconformato());
             //longitud.setText(sLongitud);
             this.mainActivity.setLocation(location);
         }

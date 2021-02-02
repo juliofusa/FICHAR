@@ -62,7 +62,7 @@ public class ADAPTADORES {
 
     public static final String HORAconformato() {
         Long date = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ITALIAN);
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.ITALIAN);
         String dateString = sdf.format(date);
         return dateString;
     }
