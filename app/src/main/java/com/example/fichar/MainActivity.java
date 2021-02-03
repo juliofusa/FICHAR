@@ -89,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
         BasedbHelper  usdbh = new BasedbHelper(this);
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
-        Cursor C_comodines= db.rawQuery("SELECT * FROM COMODINES ", null);
+        Cursor C_comodines= db.rawQuery("SELECT * FROM CLIENTES ", null);
 
 
-        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"COMODIN"}), new int[] {R.id.Spiner_text},0);
+        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"CLIENTE"}), new int[] {R.id.Spiner_text},0);
 
         CLIENTES.setAdapter(adapterCOMODINES);
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void CMD_CONFIGURAR (View V){
         importar_COMODINES();
-       // importar_CLIENTES();
+        importar_CLIENTES();
 
     }
     public void firmar (View v){
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
        // i.putExtra("FORMACION", "presencia");
        // i.putExtra("HORA", hora.getText());
 
-        mensaje("bien");
+
         startActivity(i);
         //finish();
     }
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         File f = new File(DIR, ADAPTADORES.A_COMODINES);
 
-        mensaje(f.toString());
+        //mensaje(f.toString());
 
         if (f.exists()) {
             mensaje(f.toString());
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
                 db.close();
 
-                f.delete();
+               // f.delete();
 
                 Toast.makeText(getBaseContext(), "ARCHIVO COMODINES IMPORTADO... "+Integer.toString(N-1)+" Registros", Toast.LENGTH_SHORT).show();
             }
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void importar_CLIENTES(){
 
-        File DIR = new File(Environment.getExternalStorageDirectory().getPath()+ADAPTADORES.R_RUTA);
+        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
 
         File f = new File(DIR, ADAPTADORES.A_CLIENTES);
 
@@ -246,10 +246,10 @@ public class MainActivity extends AppCompatActivity {
 
                 BufferedReader Cli =new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 
-               /** while((texto = Cli.readLine())!=null){
+                while((texto = Cli.readLine())!=null){
                     String CODIFICACION= new String(texto.getBytes("UTF-8"),"UTF-8");
                     String [] registro=CODIFICACION.split(";");
-                    mensaje(registro[0]);
+
                     if (N==0){N += 1;}else{
 
                         ContentValues nuevoRegistro = new ContentValues();
@@ -263,12 +263,12 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-              **/
+
                 Cli.close();
 
                 db.close();
 
-                f.delete();
+                //f.delete();
 
                 Toast.makeText(getBaseContext(), "ARCHIVO CLIENTES IMPORTADO... "+Integer.toString(N-1)+" Registros", Toast.LENGTH_SHORT).show();
             }
@@ -289,7 +289,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             localizar();
         }
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,}, 1000);
+        }
 
     }
 
