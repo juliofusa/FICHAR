@@ -21,6 +21,7 @@ public class Canvasview extends View {
     public int width;
     public int height,color= Color.BLUE;
     private Bitmap mBitmap;
+    public Bitmap temp;
     private Canvas mCanvas;
     private Path mPath;
     Context context;
@@ -89,6 +90,11 @@ public class Canvasview extends View {
     public void clearCanvas() {
         mPath.reset();
         invalidate();
+    }
+    public Bitmap getBitmapFromView()
+    {
+        temp= mBitmap;
+        return temp;
     }
     public void Color_rojo(int grosor) {
         mPath.reset();

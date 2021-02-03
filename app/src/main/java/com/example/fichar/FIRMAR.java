@@ -1,7 +1,10 @@
 package com.example.fichar;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,11 +22,19 @@ public class FIRMAR extends AppCompatActivity {
         setContentView(R.layout.activity_f_i_r_m_a_r);
 
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
+
     }
     public void clearCanvas(View v) {
         //BORRAR PANTALLA
         customCanvas.clearCanvas();
 
+    }
+    public Bitmap getBitmapFromView(View view)
+    {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
     }
     public void guardar_firma(View v) {
         {
@@ -31,12 +42,15 @@ public class FIRMAR extends AppCompatActivity {
             long l=0;
             String NOM="";
 
-            customCanvas.setDrawingCacheEnabled(true);
-            Bitmap bmpBase = customCanvas.getDrawingCache();
+            Bitmap bmpBase;
+
+            bmpBase = getBitmapFromView(customCanvas.getRootView());
+            // Bitmap bmpBase = customCanvas.getDrawingCache();
 
 
             File sdCard = Environment.getExternalStorageDirectory();
             File dir = new File(sdCard.getAbsolutePath() + ADAPTADORES.R_RUTA);
+
             if (!dir.exists())
                 dir.mkdirs();
             String cola_archivo,mensaje;
@@ -48,14 +62,17 @@ public class FIRMAR extends AppCompatActivity {
                 NOM="firma"+cola_archivo;
 
             File f = new File(dir, NOM);
+            Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
             try {
-                FileOutputStream fos = new FileOutputStream(f);
-                bmpBase.compress(Bitmap.CompressFormat.PNG, 50, fos);
-                fos.flush();
-                fos.close();
-                l=f.length();
+                FileOutputStream out = new FileOutputStream(f) ;
+                bmpBase.compress(Bitmap.CompressFormat.PNG, 50, out);
+                //FileOutputStream fos = new FileOutputStream(f);
+                //bmpBase.compress(Bitmap.CompressFormat.PNG, 50, fos);
+                out.flush();
+                out.close();
+                //l=f.length();
 
-                if (l<10000){
+                if (l<10){
 
                     f.delete();
 
@@ -63,7 +80,7 @@ public class FIRMAR extends AppCompatActivity {
 
                     customCanvas.clearCanvas();
 
-                    customCanvas.setDrawingCacheEnabled(false);
+                    //customCanvas.setDrawingCacheEnabled(false);
 
                 }else{
 
