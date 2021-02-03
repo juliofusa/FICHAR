@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:backgroundTintMode="add"
+    android:backgroundTint="@android:color/background_light"
+    android:id="@+id/id">
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:onClick="clearCanvas"
+        android:text="BORRAR"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/b_GUARDAR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:onClick="guardar_firma"
+        android:text="GUARDAR" />
+
+
+    <TextView
+        android:id="@+id/msg_firma"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/signature_canvas"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@+id/b_GUARDAR"
+        android:layout_toEndOf="@+id/button10"
+
+        android:background="@android:color/holo_orange_light"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="?android:attr/colorForeground"
+        android:textStyle="italic" />
+
+    <view
+        android:id="@+id/signature_canvas"
+        class="com.example.fichar.Canvasview"
+
+        layout_alignStart="@+id/button10"
+        layout_below="@+id/button10"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/button10"
+        android:background="@android:color/background_light"
+        android:backgroundTint="@android:color/background_light"
+        android:backgroundTintMode="screen" />
+
+</RelativeLayout>

@@ -129,6 +129,18 @@ public class MainActivity extends AppCompatActivity {
        // importar_CLIENTES();
 
     }
+    public void firmar (View v){
+        final Intent i = new Intent(this, FIRMAR.class);
+        //i.putExtra("FECHA", fecha.getText());
+        //i.putExtra("NOMBRECOMPLETO", "prueba");
+
+       // i.putExtra("FORMACION", "presencia");
+       // i.putExtra("HORA", hora.getText());
+
+        mensaje("bien");
+        startActivity(i);
+        //finish();
+    }
     public void importar_COMODINES(){
 
         File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
@@ -343,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
             location.getLongitude();
             String sLatitud = String.valueOf(location.getLatitude());
             String sLongitud = String.valueOf(location.getLongitude());
-            gps.setText(sLatitud +" "+ sLongitud);
+            gps.setText(sLatitud +","+ sLongitud);
             //hora.setText(ADAPTADORES.HORAconformato());
             //longitud.setText(sLongitud);
             this.mainActivity.setLocation(location);
