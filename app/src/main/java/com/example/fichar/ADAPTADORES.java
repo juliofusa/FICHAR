@@ -25,7 +25,7 @@ public class ADAPTADORES {
     public static final String A_GESTORES="GESTORES.txt";
 
     private Context contexto;
-    private BasedbHelper dbHelper;
+    private BasedbHelper BasedbHelper;
     private SQLiteDatabase db;
 
     public ADAPTADORES(Context context)
@@ -35,14 +35,14 @@ public class ADAPTADORES {
 
     public BasedbHelper abrir(Context cntx) throws SQLException
     {
-        dbHelper = new BasedbHelper(cntx);
-        db = dbHelper.getWritableDatabase();
-        return dbHelper;
+        BasedbHelper = new BasedbHelper(cntx);
+        db = BasedbHelper.getWritableDatabase();
+        return BasedbHelper;
     }
 
     public void cerrar()
     {
-        dbHelper.close();
+        BasedbHelper.close();
     }
 
     public Cursor getGESTOR() throws SQLException
@@ -51,6 +51,7 @@ public class ADAPTADORES {
 
         return c;
     }
+
     public static  String FECHAconformato() {
         Long date = System.currentTimeMillis()+172800000;
 
@@ -129,5 +130,15 @@ public class ADAPTADORES {
 
         //return diassemana[now.get(Calendar.DAY_OF_WEEK) - 1];
         return diassemana[0];
+    }
+    public static boolean USUARIOVALIDO(){
+
+        return true;
+    }
+    public  Cursor getCOMODIN(String COMODIN,String DNI) throws SQLException
+    {
+        Cursor c=db.rawQuery("SELECT _id,COMODIN,DNI FROM COMODINES WHERE  COMODIN='"+COMODIN+"' AND DNI='"+DNI+"'", null);
+
+        return c;
     }
 }

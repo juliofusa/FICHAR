@@ -15,8 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FICHAR">
-        <activity android:name=".FIRMAR"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".FIRMAR"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden"
+            ></activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden" >
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

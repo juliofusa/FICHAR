@@ -11,4 +11,5 @@
     <string name="CONFIGURAR">CONFIGURAR</string>
     <string name="fichar_ini">INICIO DE FICHAJE</string>
     <string name="clientes">CLIENTES</string>
+    <string name="NOVALIDO">Falta el nombre de usuario y/o Contraseña</string>
 </resources>

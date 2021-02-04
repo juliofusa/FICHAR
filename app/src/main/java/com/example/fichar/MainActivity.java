@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
@@ -24,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.SimpleCursorAdapter;
@@ -44,11 +46,14 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
-    public TextView fecha, direccion, hora, cliente, gps;
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public TextView fecha, direccion, hora, cliente, gps,T_COMODIN,T_DNI;
     private EditText COMODIN,DNI;
     private Spinner CLIENTES;
+    private String Cliente_selecionado,Usuario_logado,Dni_logado;
     private ImageButton FICHAR_INICIO,FICHAR_FIN;
+    private ADAPTADORES dblogin;
+    private SQLiteDatabase db;
     public boolean b=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
 
         gps = findViewById(R.id.Txt_gps);
 
+        T_COMODIN= findViewById(R.id.Txt_usuario);
+
+        T_DNI= findViewById(R.id.Txt_dni);
+
         COMODIN=findViewById(R.id.ED_comodin);
 
         DNI=findViewById(R.id.ED_dni);
@@ -86,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         FICHAR_FIN=findViewById(R.id.CMD_FICHAR_FIN);
 
+
         BasedbHelper  usdbh = new BasedbHelper(this);
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
@@ -95,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"CLIENTE"}), new int[] {R.id.Spiner_text},0);
 
         CLIENTES.setAdapter(adapterCOMODINES);
+
+        CLIENTES.setOnItemSelectedListener(this);
 
         Comprobar_permisos();
 
@@ -124,22 +136,74 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    private void visibilidad(Integer visibilidad){
+
+        T_COMODIN.setVisibility(visibilidad);
+
+        T_DNI.setVisibility(visibilidad);
+
+        COMODIN.setVisibility(visibilidad);
+
+        DNI.setVisibility(visibilidad);
+
+        FICHAR_INICIO.setVisibility(visibilidad);
+
+    }
+
+    public void CMD_FICHAR(View V){
+
+        Usuario_logado=COMODIN.getText().toString();
+
+        Dni_logado=DNI.getText().toString();
+
+        if (Usuario_logado.equals("") || Dni_logado.equals("")){
+            mensaje("Falta usuario y/o contraseña");
+        }else{
+
+            Cursor login=getCOMODIN(Usuario_logado,Dni_logado);
+            //login.moveToLast();
+            if (login.getCount()>0){
+                mensaje(" ES VALIDO");
+                FICHAR_FIN.setVisibility(View.VISIBLE);
+                CLIENTES.setVisibility(View.INVISIBLE);
+                visibilidad(View.INVISIBLE);
+
+            }else{
+                mensaje(" NO ES VALIDO");
+                FICHAR_FIN.setVisibility(View.INVISIBLE);
+                FICHAR_INICIO.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+
     public void CMD_CONFIGURAR (View V){
         importar_COMODINES();
         importar_CLIENTES();
 
     }
+
+
     public void firmar (View v){
         final Intent i = new Intent(this, FIRMAR.class);
         //i.putExtra("FECHA", fecha.getText());
-        //i.putExtra("NOMBRECOMPLETO", "prueba");
-
+        i.putExtra("NOMBRECOMPLETO", COMODIN.getText().toString());
+        i.putExtra("CLIENTE", Cliente_selecionado);
        // i.putExtra("FORMACION", "presencia");
        // i.putExtra("HORA", hora.getText());
 
 
         startActivity(i);
-        //finish();
+        finish();
+    }
+    public Cursor getCOMODIN(String COMODIN,String DNI) throws SQLException
+    {
+        BasedbHelper  usdbh = new BasedbHelper(this);
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
+        Cursor c=db.rawQuery("SELECT _id,COMODIN,DNI FROM COMODINES WHERE  COMODIN='"+COMODIN+"' AND DNI='"+DNI+"'", null);
+
+        return c;
     }
     public void importar_COMODINES(){
 
@@ -338,6 +402,25 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        adapterView.getItemAtPosition(i);
+        switch (adapterView.getId()){
+            case R.id.SP_CLIENTE:
+                Cursor cli=(Cursor)adapterView.getItemAtPosition(i);
+                cliente.setText(cli.getString(cli.getColumnIndex(ADAPTADORES.C_COLUMNA_CLIENTE)));
+                Cliente_selecionado=cliente.getText().toString();
+                if (!Cliente_selecionado.equals("")){visibilidad(view.VISIBLE);}else{visibilidad(view.INVISIBLE);}
+
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 

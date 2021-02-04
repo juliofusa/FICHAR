@@ -1,5 +1,6 @@
 package com.example.fichar;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -15,12 +16,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FIRMAR extends AppCompatActivity {
+    private String FECHA,HORA,NOMBRECOMPLETO,CLIENTE;
+
     private Canvasview customCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_f_i_r_m_a_r);
-
+        NOMBRECOMPLETO=getIntent().getStringExtra("NOMBRECOMPLETO");
+        CLIENTE=getIntent().getStringExtra("CLIENTE");
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
 
     }
@@ -43,26 +47,26 @@ public class FIRMAR extends AppCompatActivity {
             String NOM="";
 
             Bitmap bmpBase;
-
-            bmpBase = getBitmapFromView(customCanvas.getRootView());
+            View can= findViewById(R.id.canvasview_FIRMAR);
+            bmpBase = getBitmapFromView(can);
             // Bitmap bmpBase = customCanvas.getDrawingCache();
 
 
-            File sdCard = Environment.getExternalStorageDirectory();
-            File dir = new File(sdCard.getAbsolutePath() + ADAPTADORES.R_RUTA);
+            //File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(this.getExternalFilesDir(null) + ADAPTADORES.R_RUTA);
 
             if (!dir.exists())
                 dir.mkdirs();
             String cola_archivo,mensaje;
 
+                Long date = System.currentTimeMillis();
 
+                cola_archivo= date+".PNG";
 
-                cola_archivo= "_.PNG";
-
-                NOM="firma"+cola_archivo;
+                NOM="FIRMA DE "+NOMBRECOMPLETO+"_"+CLIENTE+"_"+cola_archivo;
 
             File f = new File(dir, NOM);
-            Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
             try {
                 FileOutputStream out = new FileOutputStream(f) ;
                 bmpBase.compress(Bitmap.CompressFormat.PNG, 50, out);
@@ -70,23 +74,27 @@ public class FIRMAR extends AppCompatActivity {
                 //bmpBase.compress(Bitmap.CompressFormat.PNG, 50, fos);
                 out.flush();
                 out.close();
-                //l=f.length();
+                l=f.length();
 
-                if (l<10){
+                if (l<15000){
 
-                    f.delete();
+                   f.delete();
 
                     Toast.makeText(getApplicationContext(), "TIENE QUE FIRMAR DE NUEVO ,FIRMA NO VALIDA ", Toast.LENGTH_LONG).show();
 
                     customCanvas.clearCanvas();
 
-                    //customCanvas.setDrawingCacheEnabled(false);
-
-                }else{
 
 
+               }else{
 
-                    Toast.makeText(getApplicationContext(), "nu se", Toast.LENGTH_SHORT).show();
+
+
+                    Toast.makeText(getApplicationContext(), "GUARDADA LA FIRMA DE "+NOMBRECOMPLETO, Toast.LENGTH_SHORT).show();
+
+                    final Intent i = new Intent(this, MainActivity.class);
+
+                    startActivity(i);
 
                     finish(); }
 
