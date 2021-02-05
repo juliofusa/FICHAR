@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -60,15 +61,22 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BasedbHelper  usdbh = new BasedbHelper(this);
+        //Comprobar_permisos();
 
-        SQLiteDatabase db = usdbh.getWritableDatabase();
+        //BasedbHelper  usdbh = new BasedbHelper(this);
+
+        //SQLiteDatabase db = usdbh.getWritableDatabase();
 
         inicializar();
     }
 
     private void inicializar() {
+
+
+
+
        // declaramos controles
+
         fecha = findViewById(R.id.Txt_fecha);
 
         fecha.setText(ADAPTADORES.FECHAconformato());
@@ -95,11 +103,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         FICHAR_FIN=findViewById(R.id.CMD_FICHAR_FIN);
 
+        Comprobar_permisos();
+
+        CREAR_CARPETAS();
 
         BasedbHelper  usdbh = new BasedbHelper(this);
+
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
         Cursor C_comodines= db.rawQuery("SELECT * FROM CLIENTES ", null);
+
+        Cursor c_fichaje=db.rawQuery("SELECT * FROM FICHAJE ", null);
+
 
 
         SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"CLIENTE"}), new int[] {R.id.Spiner_text},0);
@@ -108,7 +123,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         CLIENTES.setOnItemSelectedListener(this);
 
-        Comprobar_permisos();
+        // comprobamos si existe algun fichaje previo
+
+        if (c_fichaje.moveToFirst() != false){
+            c_fichaje.moveToLast();
+            String fichsalida=c_fichaje.getString(4);
+            String Cliente=c_fichaje.getString(2);
+            Usuario_logado=c_fichaje.getString(7);
+            if (fichsalida.equals("PENDIENTE")){
+                visibilidad(View.INVISIBLE);
+                CLIENTES.setVisibility(View.INVISIBLE);
+                FICHAR_FIN.setVisibility(View.VISIBLE);
+                cliente.setText(Cliente);
+                Cliente_selecionado=Cliente;
+               //Toast.makeText(this, Cliente_selecionado, Toast.LENGTH_LONG).show();
+            }else{
+                visibilidad(View.INVISIBLE);
+            }
+        }else{visibilidad(View.INVISIBLE);}
+
+        //relog
 
         Timer timer = new Timer();
 
@@ -131,11 +165,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         };
         timer.scheduleAtFixedRate(t,1000,1000);
 
-
-
-
-
     }
+
     private void visibilidad(Integer visibilidad){
 
         T_COMODIN.setVisibility(visibilidad);
@@ -149,7 +180,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         FICHAR_INICIO.setVisibility(visibilidad);
 
     }
+    private void CREAR_CARPETAS(){
+        // listado de carpetas a crear
+        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_EXPORTACIONES);
 
+        // comprobamoms si existen los directorios "fotopuesto" y "ORDEN DE PUESTO" y creamos carpetas y subcarpetas
+        if (!DIR.exists()){
+            DIR.mkdirs();
+
+        }
+
+    }
     public void CMD_FICHAR(View V){
 
         Usuario_logado=COMODIN.getText().toString();
@@ -163,11 +204,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             Cursor login=getCOMODIN(Usuario_logado,Dni_logado);
             //login.moveToLast();
             if (login.getCount()>0){
-                mensaje(" ES VALIDO");
+                //mensaje(" ES VALIDO");
                 FICHAR_FIN.setVisibility(View.VISIBLE);
                 CLIENTES.setVisibility(View.INVISIBLE);
                 visibilidad(View.INVISIBLE);
-
+                Fichaje_inicial();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(V.getWindowToken(), 0);
             }else{
                 mensaje(" NO ES VALIDO");
                 FICHAR_FIN.setVisibility(View.INVISIBLE);
@@ -185,26 +228,61 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     public void firmar (View v){
+
+        String msgps=gps.getText().toString();
+
+        if (!msgps.equals("Localización agregada")){
+
         final Intent i = new Intent(this, FIRMAR.class);
         //i.putExtra("FECHA", fecha.getText());
-        i.putExtra("NOMBRECOMPLETO", COMODIN.getText().toString());
+        i.putExtra("NOMBRECOMPLETO", Usuario_logado);
         i.putExtra("CLIENTE", Cliente_selecionado);
-       // i.putExtra("FORMACION", "presencia");
-       // i.putExtra("HORA", hora.getText());
-
+        i.putExtra("GPS_SALIDA", gps.getText().toString());
+        i.putExtra("DIRECCION_SALIDA", direccion.getText().toString());
 
         startActivity(i);
-        finish();
+        finish();}else{
+            mensaje("El GPS no esta operativo, espere");
+        }
     }
-    public Cursor getCOMODIN(String COMODIN,String DNI) throws SQLException
-    {
+
+    private void Fichaje_inicial(){
+
+        BasedbHelper usdbh = new BasedbHelper(this);
+
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
+        if (db != null) {
+
+            ContentValues nuevoRegistro = new ContentValues();
+
+            nuevoRegistro.put("FECHA", ADAPTADORES.FECHAconformato());
+            nuevoRegistro.put("CLIENTE",  Cliente_selecionado);
+            nuevoRegistro.put("HORA_ENTRADA", ADAPTADORES.HORAMINUTO());
+            nuevoRegistro.put("HORA_SALIDA", "PENDIENTE");
+            nuevoRegistro.put("GPS_ENTRADA", gps.getText().toString());
+            nuevoRegistro.put("COMODIN", Usuario_logado);
+            nuevoRegistro.put("DIRECCION_ENTRADA", direccion.getText().toString());
+
+            db.insert("FICHAJE", null, nuevoRegistro);
+
+
+        }
+        mensaje("Inicio fichaje registrado");
+    }
+
+    public Cursor getCOMODIN(String COMODIN,String DNI) throws SQLException {
+
         BasedbHelper  usdbh = new BasedbHelper(this);
+
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
         Cursor c=db.rawQuery("SELECT _id,COMODIN,DNI FROM COMODINES WHERE  COMODIN='"+COMODIN+"' AND DNI='"+DNI+"'", null);
 
+
         return c;
     }
+
     public void importar_COMODINES(){
 
         File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
@@ -278,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Toast.makeText(getBaseContext(), "NO EXISTE EL ARCHIVO", Toast.LENGTH_SHORT).show();}
     }
+
     public void importar_CLIENTES(){
 
         File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
@@ -410,10 +489,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapterView.getItemAtPosition(i);
         switch (adapterView.getId()){
             case R.id.SP_CLIENTE:
+
+                if (i>0){
                 Cursor cli=(Cursor)adapterView.getItemAtPosition(i);
                 cliente.setText(cli.getString(cli.getColumnIndex(ADAPTADORES.C_COLUMNA_CLIENTE)));
                 Cliente_selecionado=cliente.getText().toString();
-                if (!Cliente_selecionado.equals("")){visibilidad(view.VISIBLE);}else{visibilidad(view.INVISIBLE);}
+                if (!Cliente_selecionado.equals("")){visibilidad(view.VISIBLE);}else{visibilidad(view.INVISIBLE);}}
 
                 break;
         }
@@ -476,40 +557,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
-    public void exportar(){
 
-        Long date = System.currentTimeMillis();
-
-        String NOMBREFICHERO="FICHAR_"+COMODIN+"_"+String.valueOf(date)+".txt";
-
-        try {
-
-            File DIR = new File(Environment.getExternalStorageDirectory().getPath()+ADAPTADORES.R_RUTA_EXPORTACIONES);
-            if (!DIR.exists()){DIR.mkdir();}
-            File file= new File(DIR,NOMBREFICHERO);
-
-            OutputStreamWriter fout = new OutputStreamWriter(new FileOutputStream(file));
-
-            String linea=System.getProperty("line.separator");
-
-            fout.write("COMODIN"+ ";" + "CLIENTE" + ";" + "HORARIO ENTRADA" + ";" + "HORARIO SALIDA" + ";" + "HORARIO_REAL_ENTRADA" + ";" + "HORARIO_REAL_SALIDA" + ";" +  "GPS_ENTRADA" + ";" + "GPS_SALIDA" + ";" + "NOTA" + ";" + "FECHA" + ";" + "GESTOR" + ";" + "ID_ANDROID" + linea);
-
-           // String registro= "\""+ COMODIN +"\"" + ";" +"\""+ CLIENTE +"\""+ ";" +""+ ";" + HORA_ENTRADA.getText().toString() + ";" +HORA_SALIDA.getText().toString()+ ";" +"00:00"+ ";" +"00:00"+ ";" +""+ ";" +""+ ";" +"\""+ OBSERV.getText().toString() + "\""+";" +fecha.getText().toString()+ ";" +"\""+GESTOR.getText().toString()+"\""+ ";" +ID_ANDROID+ ";" ;
-
-          //  fout.write(registro+linea);
-
-            fout.close();
-
-            mensaje("DATOS EXPORTADOS");
-
-
-
-        } catch (Exception ex) {
-            Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
-        }
-
-
-
-    }
 }
 

@@ -3,7 +3,7 @@
     <string name="USUARIO">USUARIO</string>
     <string name="CONTRASEÑA">CONTRASEÑA</string>
     <string name="DIRECCION">DIRECCION</string>
-    <string name="CLIENTE">CLIENTE</string>
+    <string name="CLIENTE">SELECCIONE CLIENTE</string>
     <string name="GPS">GPS</string>
     <string name="FIN">fin de fichaje</string>
     <string name="HORA">HORA</string>

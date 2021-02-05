@@ -53,7 +53,8 @@ public class ADAPTADORES {
     }
 
     public static  String FECHAconformato() {
-        Long date = System.currentTimeMillis()+172800000;
+
+        Long date = System.currentTimeMillis();
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         //String dateString =
@@ -64,6 +65,12 @@ public class ADAPTADORES {
     public static final String HORAconformato() {
         Long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.ITALIAN);
+        String dateString = sdf.format(date);
+        return dateString;
+    }
+    public static final String HORAMINUTO() {
+        Long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ITALIAN);
         String dateString = sdf.format(date);
         return dateString;
     }
