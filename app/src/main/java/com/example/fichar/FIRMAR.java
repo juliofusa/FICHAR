@@ -19,10 +19,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class FIRMAR extends AppCompatActivity {
     private String DIRECCION_SALIDA,GPS_SALIDA,HORA,NOMBRECOMPLETO,CLIENTE;
-
+    private Integer T;
     private Canvasview customCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class FIRMAR extends AppCompatActivity {
         DIRECCION_SALIDA=getIntent().getStringExtra("DIRECCION_SALIDA");
         GPS_SALIDA=getIntent().getStringExtra("GPS_SALIDA");
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
+        Temporizador();
 
     }
     public void clearCanvas(View v) {
@@ -62,7 +65,7 @@ public class FIRMAR extends AppCompatActivity {
 
 
             //File sdCard = Environment.getExternalStorageDirectory();
-            File dir = new File(this.getExternalFilesDir(null) + ADAPTADORES.R_RUTA);
+            File dir = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_EXPORTACIONES);
 
             if (!dir.exists())
                 dir.mkdirs();
@@ -188,7 +191,7 @@ public class FIRMAR extends AppCompatActivity {
 
             fout.close();
 
-            Toast.makeText(getApplicationContext(), "exportado"+NOMBRECOMPLETO, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getApplicationContext(), "exportado "+NOMBRECOMPLETO, Toast.LENGTH_SHORT).show();
 
 
 
@@ -198,6 +201,34 @@ public class FIRMAR extends AppCompatActivity {
 
 
 
+    }
+    private void Temporizador(){
+
+        Timer timer = new Timer();
+
+        TimerTask t = new TimerTask() {
+
+            @Override
+            public void run() {
+
+
+                if (T!=90){
+                    T=+1;
+                }else{
+                  fin();
+
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(t,1000,1000);
+    }
+    private void fin (){
+        final Intent i = new Intent(this, MainActivity.class);
+
+
+        startActivity(i);
+
+        finish();
     }
 }
 
