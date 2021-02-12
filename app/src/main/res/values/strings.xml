@@ -20,6 +20,6 @@
     <string name="TIENE">Tiene: </string>
     <string name="segundos">Segundos para firmar</string>
     <string name="entrada">Fichaje Entrada:</string>
-    <string name="alas">a las</string>
+    <string name="alas"> a las</string>
     <string name="LOCALIZACION">Localización agregada</string>
 </resources>
