@@ -54,7 +54,7 @@ public class FIRMAR extends AppCompatActivity {
                     fin();
 
                 }else{
-                    MENSAJE.setText("Tiene: "+String.valueOf(Tiempo)+" Segundos para firmar");
+                    MENSAJE.setText(getResources().getString(R.string.TIENE)+String.valueOf(Tiempo)+getResources().getString(R.string.segundos));
 
                 }
             }
@@ -78,7 +78,7 @@ public class FIRMAR extends AppCompatActivity {
         {
 
             long l=0;
-            String NOM="";
+            //String NOM="";
 
             Bitmap bmpBase;
 
@@ -99,7 +99,7 @@ public class FIRMAR extends AppCompatActivity {
 
                 cola_archivo= date+".PNG";
 
-                NOM="FIRMA DE "+NOMBRECOMPLETO+"_"+CLIENTE+"_"+cola_archivo;
+            String NOM="FIRMA DE "+NOMBRECOMPLETO+"_"+CLIENTE+"_"+cola_archivo;
 
             File f = new File(dir, NOM);
            // Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
@@ -126,11 +126,12 @@ public class FIRMAR extends AppCompatActivity {
 
 
 
-                    Toast.makeText(getApplicationContext(), "GUARDADA LA FIRMA DE "+NOMBRECOMPLETO, Toast.LENGTH_SHORT).show();
 
                     //final Intent i = new Intent(this, MainActivity.class);
 
                     Fichaje_final(NOM);
+
+                    Toast.makeText(getApplicationContext(), "FICHAJE SALIDA DE "+NOMBRECOMPLETO+" A LAS "+HORA, Toast.LENGTH_SHORT).show();
 
                     fin();
                     //startActivity(i);
@@ -166,13 +167,14 @@ public class FIRMAR extends AppCompatActivity {
 
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
+        HORA=ADAPTADORES.HORAMINUTO();
 
         if (db != null) {
 
             ContentValues nuevoRegistro = new ContentValues();
 
 
-            nuevoRegistro.put("HORA_SALIDA", ADAPTADORES.HORAMINUTO());
+            nuevoRegistro.put("HORA_SALIDA", HORA);
             nuevoRegistro.put("GPS_SALIDA", GPS_SALIDA);
             nuevoRegistro.put("DIRECCION_SALIDA", DIRECCION_SALIDA);
             nuevoRegistro.put("FIRMA", Firma);

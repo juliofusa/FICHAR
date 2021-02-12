@@ -10,4 +10,7 @@
     <color name="azul">#1638F4</color>
     <color name="verde">#89FB89</color>
     <color name="Color_amarillo_reg">#ECDE68</color>
+    <color name="gris">#DAD8D8</color>
+    <color name="azul_claro">#8AF4F4</color>
+    <color name="rojo_claro">#F48C8C</color>
 </resources>

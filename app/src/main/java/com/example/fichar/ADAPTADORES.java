@@ -47,7 +47,7 @@ public class ADAPTADORES {
 
     public Cursor getGESTOR() throws SQLException
     {
-        Cursor c = db.query( true, C_COLUMNA_GESTOR, listaGESTOR, null, null, null, null,null, null);
+         Cursor c = db.query( true, C_COLUMNA_GESTOR, listaGESTOR, null, null, null, null,null, null);
 
         return c;
     }
@@ -56,7 +56,7 @@ public class ADAPTADORES {
 
         Long date = System.currentTimeMillis();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
         //String dateString =
         return sdf.format(date);
     }
@@ -65,14 +65,20 @@ public class ADAPTADORES {
     public static final String HORAconformato() {
         Long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.ITALIAN);
-        String dateString = sdf.format(date);
-        return dateString;
+        //String dateString = sdf.format(date);
+        return sdf.format(date);
     }
     public static final String HORAMINUTO() {
         Long date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ITALIAN);
-        String dateString = sdf.format(date);
-        return dateString;
+       // String dateString = sdf.format(date);
+        return sdf.format(date);
+    }
+    public static final String tiempocompleto() {
+        Long date = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss", Locale.ITALIAN);
+       // String dateString = sdf.format(date);
+        return sdf.format(date);
     }
     //devuelve String con el MES Y AÑO
     public static  final String mesyano(String FECHA){

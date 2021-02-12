@@ -12,4 +12,14 @@
     <string name="fichar_ini">INICIO DE FICHAJE</string>
     <string name="clientes">CLIENTES</string>
     <string name="NOVALIDO">Falta el nombre de usuario y/o Contraseña</string>
+    <string name="ESCRIBA">ESCRIBA SU NOMBRE</string>
+    <string name="FICHAR">FICHAR</string>
+    <string name="BORRAR">BORRAR</string>
+    <string name="FIRMAR_MSJ">FIRME POR FAVOR</string>
+    <string name="SERVICIO">EULEN SERVICIOS AUXILIARES</string>
+    <string name="TIENE">Tiene: </string>
+    <string name="segundos">Segundos para firmar</string>
+    <string name="entrada">Fichaje Entrada:</string>
+    <string name="alas">a las</string>
+    <string name="LOCALIZACION">Localización agregada</string>
 </resources>

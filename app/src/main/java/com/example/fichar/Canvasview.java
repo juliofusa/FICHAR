@@ -8,14 +8,21 @@ package com.example.fichar;
  */
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Typeface;
+import android.provider.Settings;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * clase personalizada de dibujo
+ */
 public class Canvasview extends View {
 
     public int width;
@@ -28,6 +35,8 @@ public class Canvasview extends View {
     private Paint mPaint;
     private float mX, mY;
     private static final float TOLERANCE = 5;
+    Paint Marcagua = new Paint();
+    Paint LOGO = new Paint();
 
     public Canvasview(Context c, AttributeSet attrs) {
         super(c, attrs);
@@ -48,6 +57,9 @@ public class Canvasview extends View {
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setStrokeWidth(4f);
 
+
+
+
     }
     // override onSizeChanged
     @Override
@@ -66,6 +78,19 @@ public class Canvasview extends View {
         // draw the mPath with the mPaint on the canvas when onDraw
 
         canvas.drawPath(mPath, mPaint);
+        Marcagua.setTypeface(Typeface.SANS_SERIF);
+        Marcagua.setTextSize(30);
+        Marcagua.setColor(getResources().getColor(R.color.gris));
+        //canvas.scale(1f, -1f, 10, 10);
+        //Marcagua.setTextAlign(Paint.Align.CENTER);
+        Marcagua.setAlpha(75);
+
+        canvas.drawText(getResources().getString(R.string.SERVICIO)+ADAPTADORES.tiempocompleto(), 50 , getHeight()-10, Marcagua);
+
+        Bitmap icon = BitmapFactory.decodeResource( getResources(), R.drawable.log_eulenbn);
+        LOGO.setAlpha(20);
+        canvas.drawBitmap( icon, (getWidth()/ 2) - (icon.getWidth() / 2.f), (getHeight() / 2.f) - (icon.getHeight()/2.f), LOGO);
+
     }
 
     // when ACTION_DOWN start touch according to the x,y values

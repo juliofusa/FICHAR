@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.CarrierConfigManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -48,10 +49,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    public TextView fecha, direccion, hora, cliente, gps,T_COMODIN,T_DNI;
+    public TextView fecha, direccion, hora, cliente, gps,persona,T_COMODIN,T_DNI;
     private EditText COMODIN,DNI;
     private Spinner CLIENTES;
-    private String Cliente_selecionado,Usuario_logado,Dni_logado;
+    private String Cliente_selecionado,Usuario_logado,Dni_logado,Hora_logado,msgps;
     private ImageButton FICHAR_INICIO,FICHAR_FIN;
     private ADAPTADORES dblogin;
     private SQLiteDatabase db;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         T_DNI= findViewById(R.id.Txt_dni);
 
+        persona= findViewById(R.id.Txt_Persona);
+
         COMODIN=findViewById(R.id.ED_comodin);
 
         DNI=findViewById(R.id.ED_dni);
@@ -130,15 +133,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String fichsalida=c_fichaje.getString(4);
             String Cliente=c_fichaje.getString(2);
             Usuario_logado=c_fichaje.getString(7);
+            Hora_logado=c_fichaje.getString(3);
+
             if (fichsalida.equals("PENDIENTE")){
                 visibilidad(View.INVISIBLE);
                 CLIENTES.setVisibility(View.INVISIBLE);
                 FICHAR_FIN.setVisibility(View.VISIBLE);
                 cliente.setText(Cliente);
                 Cliente_selecionado=Cliente;
+                persona.setText(getResources().getString(R.string.entrada)+Usuario_logado+getResources().getString(R.string.alas)+Hora_logado);
+                persona.setVisibility(View.VISIBLE);
                //Toast.makeText(this, Cliente_selecionado, Toast.LENGTH_LONG).show();
             }else{
                 visibilidad(View.INVISIBLE);
+                persona.setVisibility(View.INVISIBLE);
             }
         }else{visibilidad(View.INVISIBLE);}
 
@@ -192,6 +200,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         FICHAR_INICIO.setVisibility(visibilidad);
 
+        //persona.setVisibility(visibilidad);
+
     }
     private void CREAR_CARPETAS(){
         // listado de carpetas a crear
@@ -210,9 +220,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Dni_logado=DNI.getText().toString();
 
+        msgps= gps.getText().toString();
+
         if (Usuario_logado.equals("") || Dni_logado.equals("")){
             mensaje("Falta usuario y/o contraseña");
         }else{
+            if (!msgps.equals("Localización agregada")){
 
             Cursor login=getCOMODIN(Usuario_logado,Dni_logado);
             //login.moveToLast();
@@ -220,14 +233,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //mensaje(" ES VALIDO");
                 FICHAR_FIN.setVisibility(View.VISIBLE);
                 CLIENTES.setVisibility(View.INVISIBLE);
+
                 visibilidad(View.INVISIBLE);
+
                 Fichaje_inicial();
+                persona.setText(getResources().getString(R.string.entrada)+Usuario_logado+getResources().getString(R.string.alas)+Hora_logado);
+                persona.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(V.getWindowToken(), 0);
-            }else{
+                }else {
                 mensaje(" NO ES VALIDO");
                 FICHAR_FIN.setVisibility(View.INVISIBLE);
                 FICHAR_INICIO.setVisibility(View.VISIBLE);
+                }
+            }else{
+                mensaje("El GPS no esta operativo, espere");
             }
         }
     }
@@ -265,13 +285,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
+        Hora_logado=ADAPTADORES.HORAMINUTO();
+
         if (db != null) {
 
             ContentValues nuevoRegistro = new ContentValues();
 
             nuevoRegistro.put("FECHA", ADAPTADORES.FECHAconformato());
             nuevoRegistro.put("CLIENTE",  Cliente_selecionado);
-            nuevoRegistro.put("HORA_ENTRADA", ADAPTADORES.HORAMINUTO());
+            nuevoRegistro.put("HORA_ENTRADA", Hora_logado);
             nuevoRegistro.put("HORA_SALIDA", "PENDIENTE");
             nuevoRegistro.put("GPS_ENTRADA", gps.getText().toString());
             nuevoRegistro.put("COMODIN", Usuario_logado);
@@ -467,7 +489,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
-        gps.setText("Localización agregada");
+        gps.setText(getResources().getString(R.string.LOCALIZACION));
+        msgps=getResources().getString(R.string.LOCALIZACION);
         direccion.setText("");
     }
 
