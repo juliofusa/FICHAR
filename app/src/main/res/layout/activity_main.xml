@@ -11,17 +11,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="1dp"
         android:text="@string/USUARIO"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/SP_CLIENTE" />
 
     <EditText
         android:id="@+id/ED_comodin"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
@@ -29,7 +29,8 @@
         android:background="@drawable/rectangle"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="10"
-        android:hint="escriba su nombre"
+        android:gravity="center_horizontal|center_vertical"
+        android:hint="Escriba su nombre"
         android:inputType="textPersonName"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -56,6 +57,7 @@
         android:background="@drawable/rectangle"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textPassword"
         android:paddingLeft="10dp"
         android:paddingEnd="10dp"
@@ -67,14 +69,17 @@
         android:id="@+id/CMD_FICHAR_INICIAL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/boton_redondo_gris"
         android:contentDescription="@string/fichar_ini"
         android:onClick="CMD_FICHAR"
+        app:layout_constraintBottom_toTopOf="@+id/Txt_hora"
         app:layout_constraintEnd_toStartOf="@+id/CMD_FICHAR_FIN"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SP_CLIENTE"
+        app:layout_constraintTop_toBottomOf="@+id/ED_dni"
         app:srcCompat="@drawable/log" />
 
     <ImageButton
@@ -99,64 +104,61 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@android:color/holo_green_dark"
         android:gravity="clip_horizontal|center_horizontal"
         android:text="@string/FECHA"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/Txt_hora"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CMD_FICHAR_INICIAL" />
+        app:layout_constraintTop_toBottomOf="@+id/Txt_hora" />
 
     <TextView
         android:id="@+id/Txt_hora"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/verde"
         android:gravity="center_horizontal"
         android:text="@string/HORA"
-        app:layout_constraintBottom_toTopOf="@+id/Txt_cliente"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Txt_fecha" />
+        app:layout_constraintTop_toBottomOf="@+id/CMD_FICHAR_INICIAL" />
 
     <TextView
         android:id="@+id/Txt_cliente"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/Color_amarillo_reg"
+        android:background="@drawable/boton_redondo_amarillo"
         android:gravity="center"
         android:hint="@string/CLIENTE"
         android:textColor="@android:color/holo_red_light"
-        app:layout_constraintBottom_toTopOf="@+id/Txt_direccion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Txt_hora" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/CMD_FICHAR_FIN"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/boton_redondo_gris"
         android:contentDescription="@string/FIN"
         android:onClick="firmar"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/CMD_FICHAR_INICIAL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/CMD_FICHAR_INICIAL"
-        app:layout_constraintTop_toBottomOf="@+id/SP_CLIENTE"
+        app:layout_constraintTop_toBottomOf="@+id/ED_dni"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/salir" />
 
     <Spinner
@@ -166,20 +168,19 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/spiner_style"
         android:backgroundTintMode="screen"
-        app:layout_constraintBottom_toTopOf="@+id/CMD_FICHAR_INICIAL"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ED_dni" />
+        app:layout_constraintTop_toBottomOf="@+id/Txt_cliente" />
 
     <TextView
         android:id="@+id/Txt_direccion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@color/teal_200"
         android:gravity="center_horizontal"
@@ -187,7 +188,7 @@
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Txt_cliente" />
+        app:layout_constraintTop_toBottomOf="@+id/Txt_fecha" />
 
     <TextView
         android:id="@+id/Txt_gps"

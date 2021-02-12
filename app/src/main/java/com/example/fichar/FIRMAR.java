@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -24,7 +25,8 @@ import java.util.TimerTask;
 
 public class FIRMAR extends AppCompatActivity {
     private String DIRECCION_SALIDA,GPS_SALIDA,HORA,NOMBRECOMPLETO,CLIENTE;
-    private Integer T;
+    private Integer Tiempo=90;
+    private TextView MENSAJE;
     private Canvasview customCanvas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,30 @@ public class FIRMAR extends AppCompatActivity {
         CLIENTE=getIntent().getStringExtra("CLIENTE");
         DIRECCION_SALIDA=getIntent().getStringExtra("DIRECCION_SALIDA");
         GPS_SALIDA=getIntent().getStringExtra("GPS_SALIDA");
+        MENSAJE=findViewById(R.id.Txt_mensajes);
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
-        Temporizador();
+
+        Timer timer = new Timer();
+
+        TimerTask t = new TimerTask() {
+
+            @Override
+            public void run() {
+
+                Tiempo-=1;
+
+                //MENSAJE.setText("CONTANDO: "+ADAPTADORES.HORAconformato());
+
+                if (Tiempo==0){
+                    fin();
+
+                }else{
+                    MENSAJE.setText("Tiene: "+String.valueOf(Tiempo)+" Segundos para firmar");
+
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(t,1,1000);
 
     }
     public void clearCanvas(View v) {
@@ -104,13 +128,15 @@ public class FIRMAR extends AppCompatActivity {
 
                     Toast.makeText(getApplicationContext(), "GUARDADA LA FIRMA DE "+NOMBRECOMPLETO, Toast.LENGTH_SHORT).show();
 
-                    final Intent i = new Intent(this, MainActivity.class);
+                    //final Intent i = new Intent(this, MainActivity.class);
 
                     Fichaje_final(NOM);
 
-                    startActivity(i);
+                    fin();
+                    //startActivity(i);
 
-                    finish(); }
+                    //finish();
+                     }
 
 
             } catch (IOException e) {
@@ -202,29 +228,13 @@ public class FIRMAR extends AppCompatActivity {
 
 
     }
-    private void Temporizador(){
-
-        Timer timer = new Timer();
-
-        TimerTask t = new TimerTask() {
-
-            @Override
-            public void run() {
+    public void Temporizador(){
 
 
-                if (T!=90){
-                    T=+1;
-                }else{
-                  fin();
-
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(t,1000,1000);
     }
     private void fin (){
-        final Intent i = new Intent(this, MainActivity.class);
 
+        final Intent i = new Intent(this, MainActivity.class);
 
         startActivity(i);
 

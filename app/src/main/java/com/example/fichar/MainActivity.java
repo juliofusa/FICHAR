@@ -166,7 +166,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         timer.scheduleAtFixedRate(t,1000,1000);
 
     }
+    private void LLENAR_SP_CLIENTES(){
+        BasedbHelper  usdbh = new BasedbHelper(this);
 
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
+        Cursor C_comodines= db.rawQuery("SELECT * FROM CLIENTES ", null);
+
+
+        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"CLIENTE"}), new int[] {R.id.Spiner_text},0);
+
+        CLIENTES.setAdapter(adapterCOMODINES);
+
+        CLIENTES.setOnItemSelectedListener(this);
+    }
     private void visibilidad(Integer visibilidad){
 
         T_COMODIN.setVisibility(visibilidad);
@@ -292,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //mensaje(f.toString());
 
         if (f.exists()) {
-            mensaje(f.toString());
+            //mensaje(f.toString());
             String texto;
 
             int N = 0;
@@ -411,6 +424,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 db.close();
 
+                LLENAR_SP_CLIENTES();
                 //f.delete();
 
                 Toast.makeText(getBaseContext(), "ARCHIVO CLIENTES IMPORTADO... "+Integer.toString(N-1)+" Registros", Toast.LENGTH_SHORT).show();
