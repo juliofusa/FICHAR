@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private EditText COMODIN,DNI;
     private Spinner CLIENTES;
     private String Cliente_selecionado,Usuario_logado,Dni_logado,Hora_logado,msgps;
-    private ImageButton FICHAR_INICIO,FICHAR_FIN;
+    private ImageButton FICHAR_INICIO,FICHAR_FIN,ACTIVAR_GPS;
     private ADAPTADORES dblogin;
     private SQLiteDatabase db;
-    public boolean b=true;
+    public boolean b=true,coor=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         FICHAR_INICIO=findViewById(R.id.CMD_FICHAR_INICIAL);
 
         FICHAR_FIN=findViewById(R.id.CMD_FICHAR_FIN);
+
+        ACTIVAR_GPS=findViewById(R.id.IM_CMD_GPS_ACTIVAR);
 
         Comprobar_permisos();
 
@@ -225,8 +227,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (Usuario_logado.equals("") || Dni_logado.equals("")){
             mensaje("Falta usuario y/o contraseña");
         }else{
-            if (!msgps.equals("Localización agregada")){
-
+            if (coor==true){
+                mensaje("true");
             Cursor login=getCOMODIN(Usuario_logado,Dni_logado);
             //login.moveToLast();
             if (login.getCount()>0){
@@ -258,6 +260,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         importar_CLIENTES();
 
     }
+    public void CMD_ACTIVAR_GPS(View V){
+        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Localizacion Local = new Localizacion();
+        Local.setMainActivity(this);
+        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled) {
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(settingsIntent);
+        }
+
+        gps.setText(getResources().getString(R.string.LOCALIZACION));
+        //msgps=getResources().getString(R.string.LOCALIZACION);
+        direccion.setText("");
+    }
+
 
 
     public void firmar (View v){
@@ -490,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, (LocationListener) Local);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) Local);
         gps.setText(getResources().getString(R.string.LOCALIZACION));
-        msgps=getResources().getString(R.string.LOCALIZACION);
+        //msgps=getResources().getString(R.string.LOCALIZACION);
         direccion.setText("");
     }
 
@@ -559,6 +576,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             String sLatitud = String.valueOf(location.getLatitude());
             String sLongitud = String.valueOf(location.getLongitude());
             gps.setText(sLatitud +","+ sLongitud);
+            coor=true;
             //hora.setText(ADAPTADORES.HORAconformato());
             //longitud.setText(sLongitud);
             this.mainActivity.setLocation(location);
@@ -581,12 +599,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         public void onProviderEnabled(@NonNull String provider) {
+            coor=true;
             gps.setText("GPS Activado");
+            ACTIVAR_GPS.setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
+            coor=false;
             gps.setText("GPS Desactivado");
+            ACTIVAR_GPS.setVisibility(View.VISIBLE);
+
         }
     }
 
