@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // comprobamos si existe algun fichaje previo
 
-        if (c_fichaje.moveToFirst() != false){
+        if (c_fichaje.moveToFirst() == true){
             c_fichaje.moveToLast();
             String fichsalida=c_fichaje.getString(4);
             String Cliente=c_fichaje.getString(2);
@@ -174,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         };
         timer.scheduleAtFixedRate(t,1000,1000);
+
+        //c_fichaje.close();
+       // C_comodines.close();
 
     }
     private void LLENAR_SP_CLIENTES(){
@@ -227,19 +230,20 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (Usuario_logado.equals("") || Dni_logado.equals("")){
             mensaje("Falta usuario y/o contraseña");
         }else{
-            if (coor==true){
-                mensaje("true");
+            if (coor){
+               // mensaje("true");
             Cursor login=getCOMODIN(Usuario_logado,Dni_logado);
             //login.moveToLast();
             if (login.getCount()>0){
                 //mensaje(" ES VALIDO");
+
                 FICHAR_FIN.setVisibility(View.VISIBLE);
                 CLIENTES.setVisibility(View.INVISIBLE);
-
                 visibilidad(View.INVISIBLE);
 
                 Fichaje_inicial();
-                persona.setText(getResources().getString(R.string.entrada)+Usuario_logado+getResources().getString(R.string.alas)+Hora_logado);
+
+                persona.setText(getResources().getString(R.string.entrada)+Usuario_logado+" "+getResources().getString(R.string.alas)+" "+Hora_logado);
                 persona.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(V.getWindowToken(), 0);
@@ -281,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         String msgps=gps.getText().toString();
 
-        if (!msgps.equals("Localización agregada")){
+        if (coor){
 
         final Intent i = new Intent(this, FIRMAR.class);
         //i.putExtra("FECHA", fecha.getText());
@@ -329,10 +333,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
-        Cursor c=db.rawQuery("SELECT _id,COMODIN,DNI FROM COMODINES WHERE  COMODIN='"+COMODIN+"' AND DNI='"+DNI+"'", null);
+        return db.rawQuery("SELECT _id,COMODIN,DNI FROM COMODINES WHERE  COMODIN='"+COMODIN+"' AND DNI='"+DNI+"'", null);
 
 
-        return c;
+        //return c;
     }
 
     public void importar_COMODINES(){
@@ -383,6 +387,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                         nuevoRegistro.put("DNI", registro[1]);
 
+                        assert db != null;
                         db.insert("COMODINES", null, nuevoRegistro);
 
                         N += 1;
@@ -450,6 +455,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         ContentValues nuevoRegistro = new ContentValues();
 
                         nuevoRegistro.put("CLIENTE", registro[0]);
+
+                        assert db != null;
 
                         db.insert("CLIENTES", null, nuevoRegistro);
 
@@ -541,17 +548,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         adapterView.getItemAtPosition(i);
-        switch (adapterView.getId()){
-            case R.id.SP_CLIENTE:
+        if (adapterView.getId()==R.id.SP_CLIENTE){
 
-                if (i>0){
+            if (i>0){
                 Cursor cli=(Cursor)adapterView.getItemAtPosition(i);
                 cliente.setText(cli.getString(cli.getColumnIndex(ADAPTADORES.C_COLUMNA_CLIENTE)));
                 Cliente_selecionado=cliente.getText().toString();
                 if (!Cliente_selecionado.equals("")){visibilidad(view.VISIBLE);}else{visibilidad(view.INVISIBLE);}}
 
-                break;
         }
+
     }
 
     @Override
@@ -582,32 +588,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             this.mainActivity.setLocation(location);
         }
 
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            switch (status) {
-                case LocationProvider.AVAILABLE:
-                    Log.d("debug", "LocationProvider.AVAILABLE");
-                    break;
-                case LocationProvider.OUT_OF_SERVICE:
-                    Log.d("debug", "LocationProvider.OUT_OF_SERVICE");
-                    break;
-                case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                    Log.d("debug", "LocationProvider.TEMPORARILY_UNAVAILABLE");
-                    break;
-            }
-        }
 
         @Override
         public void onProviderEnabled(@NonNull String provider) {
             coor=true;
-            gps.setText("GPS Activado");
+            gps.setText(getResources().getString(R.string.GPSACTIVADO));
             ACTIVAR_GPS.setVisibility(View.INVISIBLE);
         }
 
         @Override
         public void onProviderDisabled(@NonNull String provider) {
             coor=false;
-            gps.setText("GPS Desactivado");
+            gps.setText(getResources().getString(R.string.GPSDESACTIVADO));
             ACTIVAR_GPS.setVisibility(View.VISIBLE);
 
         }
