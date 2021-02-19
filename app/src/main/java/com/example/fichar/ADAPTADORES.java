@@ -13,6 +13,7 @@ public class ADAPTADORES {
 
     public static final String R_RUTA_EXPORTACIONES="/COMODIN/EXPORTACIONES/";
     public static final String R_RUTA="/COMODIN/";
+    public static final String R_RUTA_IMPORTACIONES="/COMODIN/DATAIMPORT/";
     public static final String C_COLUMNA_ID  = "_id";
     public static final String C_COLUMNA_GESTOR = "GESTOR";
     public static final String C_COLUMNA_ID_ANDROID = "ID_ANDROID";
