@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
-        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"CLIENTE"}), new int[] {R.id.Spiner_text},0);
+        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {ADAPTADORES.C_COLUMNA_CLIENTE}), new int[] {R.id.Spiner_text},0);
 
         CLIENTES.setAdapter(adapterCOMODINES);
 

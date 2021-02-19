@@ -7,10 +7,10 @@
     android:layout_height="wrap_content"
 
     android:gravity="center"
-    android:hint="Clientes"
+    android:hint="@string/clientes"
     android:paddingLeft="22dp"
     android:paddingRight="22dp"
     android:textColor="@android:color/holo_red_light"
     android:textColorHint="@android:color/holo_red_dark"
-    android:textSize="18sp"
+    android:textSize="14sp"
     tools:layout_editor_absoluteY="89dp" />
