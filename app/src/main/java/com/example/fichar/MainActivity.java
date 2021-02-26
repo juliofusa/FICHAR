@@ -211,10 +211,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void CREAR_CARPETAS(){
         // listado de carpetas a crear
         File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_EXPORTACIONES);
+        File DIR_Act = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_IMPORTACIONES);
 
         // comprobamoms si existen los directorios "fotopuesto" y "ORDEN DE PUESTO" y creamos carpetas y subcarpetas
         if (!DIR.exists()){
             DIR.mkdirs();
+            DIR_Act.mkdirs();
 
         }
 
@@ -341,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void importar_COMODINES(){
 
-        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
+        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_IMPORTACIONES);
 
         File f = new File(DIR, ADAPTADORES.A_COMODINES);
 
@@ -416,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void importar_CLIENTES(){
 
-        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA);
+        File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_IMPORTACIONES);
 
         File f = new File(DIR, ADAPTADORES.A_CLIENTES);
 
