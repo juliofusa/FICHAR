@@ -24,4 +24,5 @@
     <string name="LOCALIZACION">Espere, buscando señal GPS....</string>
     <string name="GPSACTIVADO">GPS ACTIVADO</string>
     <string name="GPSDESACTIVADO">GPS DESACTIVADO</string>
+    <string name="botonGPS">GPS activacion</string>
 </resources>

@@ -223,9 +223,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
     public void CMD_FICHAR(View V){
 
-        Usuario_logado=COMODIN.getText().toString();
+        Usuario_logado=COMODIN.getText().toString().toUpperCase();
 
-        Dni_logado=DNI.getText().toString();
+        Dni_logado=DNI.getText().toString().toUpperCase();
 
         msgps= gps.getText().toString();
 

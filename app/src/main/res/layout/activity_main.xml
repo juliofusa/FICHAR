@@ -10,13 +10,15 @@
         android:id="@+id/Txt_usuario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
         android:text="@string/USUARIO"
         android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/ED_comodin"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SP_CLIENTE" />
+        app:layout_constraintTop_toBottomOf="@+id/CMD_FICHAR_INICIAL" />
 
     <EditText
         android:id="@+id/ED_comodin"
@@ -36,6 +38,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Txt_usuario" />
 
@@ -45,7 +48,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="1dp"
         android:text="@string/CONTRASEÑA"
+        app:layout_constraintBottom_toTopOf="@+id/ED_dni"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ED_comodin" />
 
@@ -54,36 +59,40 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints=""
         android:background="@drawable/rectangle"
         android:drawableStart="@android:drawable/ic_menu_edit"
         android:ems="10"
+
         android:gravity="center"
         android:hint="@string/CONTRASEÑA"
         android:inputType="textPassword"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-
-        app:layout_constraintBottom_toTopOf="@+id/CMD_FICHAR_INICIAL"
+        app:layout_constraintBottom_toTopOf="@+id/Txt_hora"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Txt_dni"
-        android:autofillHints="" />
+        app:layout_constraintTop_toBottomOf="@+id/Txt_dni" />
 
     <ImageButton
         android:id="@+id/CMD_FICHAR_INICIAL"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/boton_redondo_gris"
         android:contentDescription="@string/fichar_ini"
         android:onClick="CMD_FICHAR"
-        app:layout_constraintBottom_toTopOf="@+id/Txt_hora"
+        app:layout_constraintBottom_toTopOf="@+id/Txt_usuario"
         app:layout_constraintEnd_toStartOf="@+id/CMD_FICHAR_FIN"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ED_dni"
+        app:layout_constraintTop_toBottomOf="@+id/SP_CLIENTE"
         app:srcCompat="@drawable/log" />
 
     <ImageButton
@@ -124,7 +133,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/verde"
@@ -133,7 +141,7 @@
         app:layout_constraintBottom_toTopOf="@+id/Txt_fecha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/CMD_FICHAR_INICIAL" />
+        app:layout_constraintTop_toBottomOf="@+id/ED_dni" />
 
     <TextView
         android:id="@+id/Txt_cliente"
@@ -155,7 +163,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/boton_redondo_gris"
         android:contentDescription="@string/FIN"
@@ -164,8 +171,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/CMD_FICHAR_INICIAL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/CMD_FICHAR_INICIAL"
-        app:layout_constraintTop_toBottomOf="@+id/ED_dni"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toTopOf="@+id/CMD_FICHAR_INICIAL"
         app:srcCompat="@drawable/salir" />
 
     <Spinner
@@ -175,12 +181,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="1dp"
         android:animateLayoutChanges="true"
-        android:divider="@drawable/line_divider"
         android:background="@drawable/spiner_style"
         android:backgroundTintMode="screen"
-        app:layout_constraintBottom_toTopOf="@+id/Txt_usuario"
+        android:divider="@drawable/line_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -244,6 +248,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/boton_redondo_gris"
+        android:contentDescription="@string/botonGPS"
         android:onClick="CMD_ACTIVAR_GPS"
         android:scaleType="fitXY"
         android:visibility="invisible"

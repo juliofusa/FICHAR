@@ -191,7 +191,7 @@ public class FIRMAR extends AppCompatActivity {
 
         Long date = System.currentTimeMillis();
 
-        String NOMBREFICHERO="FICHAR_"+NOMBRECOMPLETO+"_"+CLIENTE+"_"+String.valueOf(date)+".txt";
+        String NOMBREFICHERO="FICHAR_"+NOMBRECOMPLETO+"_"+"_"+String.valueOf(date)+".txt";
 
         BasedbHelper usdbh = new BasedbHelper(this);
 
