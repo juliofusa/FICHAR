@@ -1,7 +1,6 @@
 package com.example.fichar;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -14,16 +13,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.os.CountDownTimer;
-import android.os.Environment;
-import android.os.Handler;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.telephony.CarrierConfigManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -38,11 +32,8 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -295,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("CLIENTE", Cliente_selecionado);
         i.putExtra("GPS_SALIDA", gps.getText().toString());
         i.putExtra("DIRECCION_SALIDA", direccion.getText().toString());
-
+            i.putExtra("id", "0");
         startActivity(i);
         finish();}else{
             mensaje("El GPS no esta operativo, espere");

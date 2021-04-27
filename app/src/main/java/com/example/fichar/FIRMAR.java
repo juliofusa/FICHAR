@@ -6,11 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -24,7 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FIRMAR extends AppCompatActivity {
-    private String DIRECCION_SALIDA,GPS_SALIDA,HORA,NOMBRECOMPLETO,CLIENTE;
+    private String DIRECCION_SALIDA,GPS_SALIDA,HORA,NOMBRECOMPLETO,CLIENTE,ID_;
     private Integer Tiempo=90;
     private TextView MENSAJE;
     private Canvasview customCanvas;
@@ -36,6 +33,7 @@ public class FIRMAR extends AppCompatActivity {
         CLIENTE=getIntent().getStringExtra("CLIENTE");
         DIRECCION_SALIDA=getIntent().getStringExtra("DIRECCION_SALIDA");
         GPS_SALIDA=getIntent().getStringExtra("GPS_SALIDA");
+        ID_=getIntent().getStringExtra("id");
         MENSAJE=findViewById(R.id.Txt_mensajes);
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
 
@@ -169,6 +167,10 @@ public class FIRMAR extends AppCompatActivity {
 
         HORA=ADAPTADORES.HORAMINUTO();
 
+        Integer nºID=0;
+
+        if (ID_.equals("0")){nºID=ID();}else{nºID=Integer.parseInt(ID_);}
+
         if (db != null) {
 
             ContentValues nuevoRegistro = new ContentValues();
@@ -179,7 +181,7 @@ public class FIRMAR extends AppCompatActivity {
             nuevoRegistro.put("DIRECCION_SALIDA", DIRECCION_SALIDA);
             nuevoRegistro.put("FIRMA", Firma);
 
-            db.update("FICHAJE",nuevoRegistro,"_id="+ID(), null);
+            db.update("FICHAJE",nuevoRegistro,"_id="+nºID, null);
 
 
         }
@@ -211,7 +213,7 @@ public class FIRMAR extends AppCompatActivity {
 
             String linea=System.getProperty("line.separator");
 
-            fout.write("COMODIN"+ ";" + "CLIENTE" + ";" + "HORARIO ENTRADA" + ";" + "HORARIO SALIDA" + ";" + "HORARIO_REAL_ENTRADA" + ";" + "HORARIO_REAL_SALIDA" + ";" +  "GPS_ENTRADA" + ";" + "GPS_SALIDA" +  "DIRECCION_ENTRADA" + ";" + "DIRECCION_SALIDA"+ ";" + "NOTA" + ";" + "FECHA" + ";" + "GESTOR" + ";" + "ID_ANDROID" + linea);
+            fout.write("COMODIN"+ ";" + "CLIENTE" + ";" + "HORARIO ENTRADA" + ";" + "HORARIO SALIDA" + ";" + "HORARIO_REAL_ENTRADA" + ";" + "HORARIO_REAL_SALIDA" + ";" +  "GPS_ENTRADA" + ";" + "GPS_SALIDA" +";" +   "DIRECCION_ENTRADA" + ";" + "DIRECCION_SALIDA"+ ";" + "NOTA" + ";" + "FECHA" + ";" + "GESTOR" + ";" + "ID_ANDROID" + linea);
 
             String registro= "\""+ c_fichaje.getString(7) +"\"" + ";"+""+ ";" +"\""+ c_fichaje.getString(2) +"\""+ ";" +""+ ";"+""+ ";" +"\""+ c_fichaje.getString(3)+"\"" + ";"+"\"" +c_fichaje.getString(4)+"\""+ ";"+"\"" +c_fichaje.getString(5)+"\""+ ";" +c_fichaje.getString(6)+ ";" +c_fichaje.getString(8)+ ";"+"\"" +c_fichaje.getString(9)+"\""+ ";"+""+ ";" +c_fichaje.getString(1)+ ";"+""+";" +""+";"+"\"" +c_fichaje.getString(10)+"\"";
 
@@ -236,7 +238,7 @@ public class FIRMAR extends AppCompatActivity {
     }
     private void fin (){
 
-        final Intent i = new Intent(this, MainActivity.class);
+        final Intent i = new Intent(this, PRINCIPAL.class);
 
         startActivity(i);
 

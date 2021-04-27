@@ -15,22 +15,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FICHAR">
-        <activity android:name=".FIRMAR"
+        <activity android:name=".Fichajes_pendientes"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            </activity>
-        <activity android:name=".MainActivity"
-            android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden" >
 
-
+            ></activity>
+        <activity
+            android:name=".PRINCIPAL"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".FIRMAR"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>
