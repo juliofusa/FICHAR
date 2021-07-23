@@ -22,9 +22,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,11 +42,13 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 
-public class PRINCIPAL extends AppCompatActivity {
+public class PRINCIPAL extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public boolean b=true,coor=false;
-    public TextView fecha, direccion, hora, cliente, gps,persona,T_COMODIN,T_DNI;
+    public TextView fecha, direccion,Version, hora, cliente, gps,persona,T_COMODIN,T_DNI;
     public String S_direccion,s_fecha,S_coordenadas,S_usuario, Scliente;
     private String Cliente_selecionado,Usuario_logado,Dni_logado,Hora_logado,msgps;
+    public ImageButton Importar_trabajadores;
+    public Button Añadir_Usuarios;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +57,8 @@ public class PRINCIPAL extends AppCompatActivity {
         CREAR_CARPETAS();
         Comprobar_permisos();
 
-      if (Cliente()==true){
+
+      if (Cliente()){
             final Intent i = new Intent(this, MainActivity.class);
 
             startActivity(i);
@@ -57,12 +66,45 @@ public class PRINCIPAL extends AppCompatActivity {
             finish();
 
 
-        }else{Scliente="METRO";}
+        }else{Scliente="METRO DE MADRID, SA";}
+
+      PackageManager packageManager =getPackageManager();
+        String packageName =getPackageName();
+        String myVersionName = "not available"; // initialize String
+        try {
+            myVersionName = packageManager.getPackageInfo(packageName, 0).versionName;
+            Version.setText("Version "+myVersionName);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        Importar_trabajadores.setOnLongClickListener(new View.OnLongClickListener() {
+          @Override
+          public boolean onLongClick(View v) {
+              Boton_Importar();
+              return true;
+          }
+      });
+
+        Añadir_Usuarios.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ALERT_usuarios();
+                return true;
+            }
+        });
+
 
     }
 
     private void inicializar() {
         direccion = findViewById(R.id.txt_direccion);
+        Importar_trabajadores = findViewById(R.id.CMD_IMPORTAR);
+        Añadir_Usuarios=findViewById(R.id.CMD_AÑADIR_USUARIO);
+        Version=findViewById(R.id.txt_version);
     }
 
     private boolean Cliente(){
@@ -73,10 +115,14 @@ public class PRINCIPAL extends AppCompatActivity {
 
         Cursor C_comodines= db.rawQuery("SELECT * FROM CLIENTES ", null);
 
-        if (C_comodines.moveToFirst() ){return true;}else{return false;}
+        if (C_comodines.moveToFirst() ){
+           // Toast.makeText(getApplicationContext(), "existe.. ", Toast.LENGTH_SHORT).show();
+            return true;
+        }else{return false;}
 
 
     }
+
     private void CREAR_CARPETAS() {
         // listado de carpetas a crear
         File DIR = new File(this.getExternalFilesDir(null) + ADAPTADORES.R_RUTA_EXPORTACIONES);
@@ -124,6 +170,24 @@ public class PRINCIPAL extends AppCompatActivity {
        // direccion.setText("");
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
+
+        switch (parent.getId()) {
+            case -1:
+                Cursor COM=(Cursor) parent.getItemAtPosition(i);
+                S_usuario=COM.getString(COM.getColumnIndex(ADAPTADORES.C_COLUMNA_COMODIN));
+                //Toast.makeText(getApplicationContext(), "Comodin.. "+S_usuario, Toast.LENGTH_SHORT).show();
+
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
     private class Localizacion implements LocationListener {
         PRINCIPAL mainActivity;
 
@@ -147,6 +211,7 @@ public class PRINCIPAL extends AppCompatActivity {
             //setLocation(location);
             this.setLocation(location);
         }
+
         public void setLocation(Location loc) {
             //Obtener la direccion de la calle a partir de la latitud y la longitud
             if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
@@ -195,7 +260,8 @@ public class PRINCIPAL extends AppCompatActivity {
     public void Boton_iniciar_fichaje(View view){
         if (coor){ALERT_FICHAJE();}
     }
-    public void Boton_Importar(View view){
+
+    public void Boton_Importar(){
         importar_COMODINES();
         importar_CLIENTES();
     }
@@ -206,6 +272,9 @@ public class PRINCIPAL extends AppCompatActivity {
         i.putExtra("GPS_SALIDA", S_coordenadas);
         i.putExtra("DIRECCION_SALIDA", direccion.getText().toString());
         startActivity(i);}
+    }
+    public void Boton_Añadir_usuario(){
+        ALERT_usuarios();
     }
 
     public void importar_COMODINES(){
@@ -252,9 +321,9 @@ public class PRINCIPAL extends AppCompatActivity {
 
                         ContentValues nuevoRegistro = new ContentValues();
 
-                        nuevoRegistro.put("COMODIN", registro[0]);
+                        nuevoRegistro.put("COMODIN", registro[0].toUpperCase());
 
-                        nuevoRegistro.put("DNI", registro[1]);
+                        nuevoRegistro.put("DNI", registro[1].toUpperCase());
 
                         assert db != null;
                         db.insert("COMODINES", null, nuevoRegistro);
@@ -358,12 +427,27 @@ public class PRINCIPAL extends AppCompatActivity {
     private void ALERT_FICHAJE(){
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        final EditText editTextNombre = new EditText(this);
-        editTextNombre.setHint(R.string.usuario);
+        final Spinner editTextNombre = new Spinner(this);
+        editTextNombre.setBackground(getDrawable(R.drawable.rectangle_spiner));
+
+        BasedbHelper  usdbh = new BasedbHelper(this);
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+        Cursor C_comodines= db.rawQuery("SELECT * FROM COMODINES ", null);
+        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {"COMODIN"}), new int[] {R.id.Spiner_text},0);
+        editTextNombre.setAdapter(adapterCOMODINES);
+        editTextNombre.setOnItemSelectedListener(this);
+
+
+
+
+       // editTextNombre.setHint(R.string.usuario);
         layout.addView(editTextNombre);
         final EditText editTextPass = new EditText(this);
         editTextPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         editTextPass.setHint(R.string.pass);
+        editTextPass.setBackground(getDrawable(R.drawable.rectangle));
+        editTextPass.setGravity(Gravity.CENTER);
+        editTextPass.setTextSize(24);
         layout.addView(editTextPass);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder
@@ -373,9 +457,10 @@ public class PRINCIPAL extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Usuario_logado=editTextNombre.getText().toString().toUpperCase();
+                        //Usuario_logado=editTextNombre.getText().toString().toUpperCase();
+                       Usuario_logado=S_usuario;
 
-                        Dni_logado=editTextPass.getText().toString().toUpperCase();
+                       Dni_logado=editTextPass.getText().toString().toUpperCase();
 
 
 
@@ -417,6 +502,57 @@ public class PRINCIPAL extends AppCompatActivity {
         alertDialogPersonalizado.show();
         //alertDialog.show();
     }
+
+    private void ALERT_usuarios(){
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText editTextPass = new EditText(this);
+        editTextPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        editTextPass.setHint(R.string.pass);
+        editTextPass.setBackground(getDrawable(R.drawable.rectangle));
+        editTextPass.setGravity(Gravity.CENTER);
+        editTextPass.setTextSize(24);
+        layout.addView(editTextPass);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Cambiar/Añadir Usuarios:")
+                .setNegativeButton("Cancelar", null)
+                .setPositiveButton("Acceso", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+
+                        Dni_logado=editTextPass.getText().toString();
+
+
+
+                        if ( Dni_logado.equals("")){
+
+                            Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
+
+                        }else{
+                            if (Dni_logado.equals("Primera08")){ ir_Añadir_usuario();}else{
+                                Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+
+                    }
+                });
+        final AlertDialog alertDialogPersonalizado = builder.create();
+        alertDialogPersonalizado.setView(layout);
+// después mostrarla:
+        alertDialogPersonalizado.show();
+        //alertDialog.show();
+    }
+
+    private void ir_Añadir_usuario(){
+        final Intent i = new Intent(this, USUARIO_NUEVO.class);
+        startActivity(i);
+    }
+
     public Cursor getCOMODIN(String COMODIN,String DNI) throws SQLException {
 
         BasedbHelper  usdbh = new BasedbHelper(this);
@@ -428,6 +564,7 @@ public class PRINCIPAL extends AppCompatActivity {
 
         //return c;
     }
+
     public Cursor getFICHAJE(String COMODIN) throws SQLException {
 
         BasedbHelper  usdbh = new BasedbHelper(this);
@@ -439,6 +576,7 @@ public class PRINCIPAL extends AppCompatActivity {
 
         //return c;
     }
+
     private void Fichaje_inicial(){
 
         BasedbHelper usdbh = new BasedbHelper(this);

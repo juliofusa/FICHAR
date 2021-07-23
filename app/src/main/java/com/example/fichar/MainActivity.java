@@ -1,8 +1,10 @@
 package com.example.fichar;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -18,12 +20,15 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,7 +47,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public TextView fecha, direccion, hora, cliente, gps,persona,T_COMODIN,T_DNI;
     private EditText COMODIN,DNI;
-    private Spinner CLIENTES;
+    private Spinner CLIENTES,USUARIOS;
     private String Cliente_selecionado,Usuario_logado,Dni_logado,Hora_logado,msgps;
     private ImageButton FICHAR_INICIO,FICHAR_FIN,ACTIVAR_GPS;
     private ADAPTADORES dblogin;
@@ -93,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         CLIENTES=findViewById(R.id.SP_CLIENTE);
 
+        USUARIOS=findViewById(R.id.SP_USUARIO);
+
         FICHAR_INICIO=findViewById(R.id.CMD_FICHAR_INICIAL);
 
         FICHAR_FIN=findViewById(R.id.CMD_FICHAR_FIN);
@@ -111,13 +118,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         Cursor c_fichaje=db.rawQuery("SELECT * FROM FICHAJE ", null);
 
+        Cursor c_USUARIOS=db.rawQuery("SELECT * FROM COMODINES ", null);
 
 
-        SimpleCursorAdapter adapterCOMODINES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,C_comodines,(new String[] {ADAPTADORES.C_COLUMNA_CLIENTE}), new int[] {R.id.Spiner_text},0);
 
-        CLIENTES.setAdapter(adapterCOMODINES);
+        SimpleCursorAdapter adapterCLIENTES = new SimpleCursorAdapter(this,R.layout.custom_spinner_item2,C_comodines,(new String[] {ADAPTADORES.C_COLUMNA_CLIENTE}), new int[] {R.id.Spiner_text2},0);
+
+        SimpleCursorAdapter adapterUSUARIOS = new SimpleCursorAdapter(this,R.layout.custom_spinner_item1,c_USUARIOS,(new String[] {ADAPTADORES.C_COLUMNA_COMODIN}), new int[] {R.id.Spiner_text},0);
+
+        CLIENTES.setAdapter(adapterCLIENTES);
 
         CLIENTES.setOnItemSelectedListener(this);
+
+        USUARIOS.setAdapter(adapterUSUARIOS);
+
+        USUARIOS.setOnItemSelectedListener(this);
 
         // comprobamos si existe algun fichaje previo
 
@@ -190,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         T_DNI.setVisibility(visibilidad);
 
-        COMODIN.setVisibility(visibilidad);
+        USUARIOS.setVisibility(visibilidad);
 
         DNI.setVisibility(visibilidad);
 
@@ -214,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
     public void CMD_FICHAR(View V){
 
-        Usuario_logado=COMODIN.getText().toString().toUpperCase();
+       // Usuario_logado=COMODIN.getText().toString().toUpperCase();
 
         Dni_logado=DNI.getText().toString().toUpperCase();
 
@@ -271,7 +286,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //msgps=getResources().getString(R.string.LOCALIZACION);
         direccion.setText("");
     }
+    public void CMD_Añadir_usuario(View v){
+        ALERT_usuarios();
 
+    }
 
 
     public void firmar (View v){
@@ -286,11 +304,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("CLIENTE", Cliente_selecionado);
         i.putExtra("GPS_SALIDA", gps.getText().toString());
         i.putExtra("DIRECCION_SALIDA", direccion.getText().toString());
-            i.putExtra("id", "0");
+        i.putExtra("id", GET_ID());
         startActivity(i);
         finish();}else{
             mensaje("El GPS no esta operativo, espere");
         }
+    }
+    private String GET_ID(){
+        BasedbHelper usdbh = new BasedbHelper(this);
+
+        SQLiteDatabase db = usdbh.getWritableDatabase();
+
+
+
+        Cursor C_comodines= db.rawQuery("SELECT _id,COMODIN FROM FICHAJE", null);
+
+        if (C_comodines.moveToLast() ){
+
+            C_comodines.getString(0);
+            // Toast.makeText(getApplicationContext(), "existe.. ", Toast.LENGTH_SHORT).show();
+            return  C_comodines.getString(0);
+        }else{return "0";}
+
     }
 
     private void Fichaje_inicial(){
@@ -332,6 +367,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //return c;
     }
 
+    private void ALERT_usuarios(){
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText editTextPass = new EditText(this);
+        editTextPass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        editTextPass.setHint(R.string.pass);
+        editTextPass.setBackground(getDrawable(R.drawable.rectangle));
+        editTextPass.setGravity(Gravity.CENTER);
+        editTextPass.setTextSize(24);
+        layout.addView(editTextPass);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder
+                .setTitle("Cambiar/Añadir Usuarios:")
+                .setNegativeButton("Cancelar", null)
+                .setPositiveButton("Acceso", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+
+                        Dni_logado=editTextPass.getText().toString();
+
+
+
+                        if ( Dni_logado.equals("")){
+
+                            Toast.makeText(getApplicationContext(), "Contraseña vacia", Toast.LENGTH_LONG).show();
+
+                        }else{
+                            if (Dni_logado.equals("Primera08")){ ir_Añadir_usuario();}else{
+                                Toast.makeText(getApplicationContext(), "Contraseña incorrecta", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+
+                    }
+                });
+        final AlertDialog alertDialogPersonalizado = builder.create();
+        alertDialogPersonalizado.setView(layout);
+// después mostrarla:
+        alertDialogPersonalizado.show();
+        //alertDialog.show();
+    }
+
+    private void ir_Añadir_usuario(){
+        final Intent i = new Intent(this, USUARIO_NUEVO.class);
+        startActivity(i);
+    }
     public void importar_COMODINES(){
 
         File DIR = new File(this.getExternalFilesDir(null)+ADAPTADORES.R_RUTA_IMPORTACIONES);
@@ -541,17 +625,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         adapterView.getItemAtPosition(i);
-        if (adapterView.getId()==R.id.SP_CLIENTE){
 
-            if (i>0){
-                Cursor cli=(Cursor)adapterView.getItemAtPosition(i);
-                cliente.setText(cli.getString(cli.getColumnIndex(ADAPTADORES.C_COLUMNA_CLIENTE)));
-                Cliente_selecionado=cliente.getText().toString();
-                if (!Cliente_selecionado.equals("")){visibilidad(view.VISIBLE);}else{visibilidad(view.INVISIBLE);}}
+        switch (adapterView.getId()) {
+            case R.id.SP_CLIENTE:
+                ;
+                if (i > 0) {
+                    Cursor cli = (Cursor) adapterView.getItemAtPosition(i);
+                    cliente.setText(cli.getString(cli.getColumnIndex(ADAPTADORES.C_COLUMNA_CLIENTE)));
+                    Cliente_selecionado = cliente.getText().toString();
+                    if (!Cliente_selecionado.equals("")) {
+                        visibilidad(view.VISIBLE);
+                    } else {
+                        visibilidad(view.INVISIBLE);
+                    }
+                }
+                break;
+            case R.id.SP_USUARIO:
+                Cursor Usu = (Cursor) adapterView.getItemAtPosition(i);
+                Usuario_logado=(Usu.getString(Usu.getColumnIndex(ADAPTADORES.C_COLUMNA_COMODIN)));
+
+                break;
 
         }
 
-    }
+
+        }
+
+
+
+
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {

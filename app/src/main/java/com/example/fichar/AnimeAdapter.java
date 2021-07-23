@@ -1,5 +1,6 @@
 package com.example.fichar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -105,15 +106,19 @@ public class AnimeAdapter extends RecyclerView.Adapter<com.example.fichar.AnimeA
                 if(pos != RecyclerView.NO_POSITION){
 
                     Intent intent = new Intent(v1.getContext(), FIRMAR.class);
+                    Intent I= new Intent(v1.getContext(),Fichajes_pendientes.class);
                     intent.putExtra("id", String.valueOf(ID.getText()));
                     intent.putExtra("DIRECCION_SALIDA", String.valueOf(DIRECCION.getText()));
                     intent.putExtra("GPS_SALIDA", String.valueOf(GPS.getText()));
                     intent.putExtra("NOMBRECOMPLETO", comodin.getText());
                     intent.putExtra("CLIENTE", comodin.getText());
+
                     v1.getContext().startActivity(intent);
+                    ((Activity)v1.getContext()).finish();
 
 
                 }
+
             });
 
 

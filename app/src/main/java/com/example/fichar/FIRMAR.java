@@ -37,6 +37,8 @@ public class FIRMAR extends AppCompatActivity {
         MENSAJE=findViewById(R.id.Txt_mensajes);
         customCanvas =  findViewById(R.id.canvasview_FIRMAR);
 
+      //Toast.makeText(getApplicationContext(), "nombre: "+NOMBRECOMPLETO+ "id: "+ID_, Toast.LENGTH_LONG).show();
+
         Timer timer = new Timer();
 
         TimerTask t = new TimerTask() {
@@ -52,7 +54,7 @@ public class FIRMAR extends AppCompatActivity {
                     fin();
 
                 }else{
-                    MENSAJE.setText(getResources().getString(R.string.TIENE)+String.valueOf(Tiempo)+getResources().getString(R.string.segundos));
+                    MENSAJE.setText(getResources().getString(R.string.TIENE)+" "+String.valueOf(Tiempo)+ " " +getResources().getString(R.string.segundos));
 
                 }
             }
@@ -73,7 +75,7 @@ public class FIRMAR extends AppCompatActivity {
         return bitmap;
     }
     public void guardar_firma(View v) {
-        {
+
 
             long l=0;
             //String NOM="";
@@ -100,7 +102,7 @@ public class FIRMAR extends AppCompatActivity {
             String NOM="FIRMA DE "+NOMBRECOMPLETO+"_"+CLIENTE+"_"+cola_archivo;
 
             File f = new File(dir, NOM);
-           // Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
+           //Toast.makeText(getApplicationContext(), f.toString(), Toast.LENGTH_LONG).show();
             try {
                 FileOutputStream out = new FileOutputStream(f) ;
                 bmpBase.compress(Bitmap.CompressFormat.PNG, 50, out);
@@ -110,7 +112,7 @@ public class FIRMAR extends AppCompatActivity {
                 out.close();
                 l=f.length();
 
-                if (l<15000){
+                if (l<=15000){
 
                    f.delete();
 
@@ -142,7 +144,7 @@ public class FIRMAR extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "FIRMA NO GUARDADA", Toast.LENGTH_SHORT).show();
             }
-        }
+
     }
     private Integer ID(){
         Integer ID;
@@ -199,7 +201,7 @@ public class FIRMAR extends AppCompatActivity {
 
         SQLiteDatabase db = usdbh.getWritableDatabase();
 
-        Cursor c_fichaje=db.rawQuery("SELECT * FROM FICHAJE ", null);
+        Cursor c_fichaje=db.rawQuery("SELECT * FROM FICHAJE WHERE _id="+ID_, null);
 
         c_fichaje.moveToLast();
 

@@ -15,10 +15,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FICHAR">
-        <activity android:name=".Fichajes_pendientes"
+        <activity
+            android:name=".USUARIO_NUEVO"
+            android:launchMode="singleInstance"
             android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity
+            android:name=".Fichajes_pendientes"
+            android:launchMode="singleInstance"
+            android:screenOrientation="sensorPortrait" />
 
-            ></activity>
         <activity
             android:name=".PRINCIPAL"
             android:screenOrientation="sensorPortrait">
@@ -36,7 +43,8 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="sensorPortrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
+
     </application>
 
 </manifest>
